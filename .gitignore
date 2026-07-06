@@ -1,0 +1,39 @@
+
+# Dependencies
+
+**/node_modules/
+
+
+# Environment Variables
+
+**/.env
+**/.env.*
+!.env.example
+
+
+# Logs
+
+*.log
+logs/
+
+
+# Build Output
+
+**/dist/
+**/build/
+coverage/
+
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+
+# Editors
+.vscode/
+.idea/
+
+
+# Misc
+*.tmp
+*.swp
