@@ -18,7 +18,7 @@ import EditCourse from './pages/Educator/EditCourse'
 import useGetPublishedCourse from './customHooks/getPublishedCourse';
 import AllCourses from './pages/AllCourses';
 
-export const serverUrl = "http://localhost:8000/";
+export const serverUrl = "https://learning-management-system-ygyb.onrender.com";
 
 function App() {
 
