@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Course from "../model/courseModel.js";
 
+
 export const createCourse = async (req, res) => {
   try {
     const { title, category, description } = req.body;
@@ -21,11 +22,10 @@ export const createCourse = async (req, res) => {
 
 export const getPublishedCourse = async (req, res) => {
   try {
-    const course = await Course.find({ published: true });
-    if (!course) {
-      return res.status(400).json({ message: `course is not found` });
-    }
-    return res.status(200).json(course);
+    const courses = await Course.find({ published: true });
+
+    // An empty array is a valid result when no courses have been published yet.
+    return res.status(200).json(courses);
   } catch (error) {
     return res
       .status(500)
@@ -138,27 +138,3 @@ export const removeCourse = async (req, res) => {
       .json({ message: `failed to remove the course ${error}` });
   }
 };
-
-// For Lecture
-
-export const createLecture = async(req,res)=>{
-  try {
-   const  {lectureTitle} = req.body
-   const {courseId} =req.params
-
-   if(lectureTitle || courseId){
-    return res.status(400).json({message:"lecture title required"})
-   }
-
-   const lecture = await Lecture.create({lectureTitle})
-   const course = await Course.findById(courseId)
-
-   if(course){
-    course.lectures.push(lecture._id)
-   }
-   
-
-  } catch (error) {
-    
-  }
-}

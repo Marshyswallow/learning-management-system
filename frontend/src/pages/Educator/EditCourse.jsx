@@ -163,7 +163,7 @@ function EditCourse() {
             <h1 className="text-2xl font-semibold">Edit Course</h1>
           </div>
           <button
-            onClick={() => navigate("/lectures")}
+            onClick={() => navigate(`/createlecture/${selectCourse._id}`)}
             className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800"
           >
             Go to Lectures

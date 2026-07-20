@@ -5,7 +5,8 @@ const courseSlice = createSlice({
 
   initialState: {
     creatorCourseData: [],
-    courseData: null,
+    courseData: [],
+    selectedCourse: null,
   },
 
   reducers: {
@@ -17,15 +18,25 @@ const courseSlice = createSlice({
       state.courseData = action.payload;
     },
     updateCourse: (state, action) => {
-
-      state.courseData = state.courseData.map((course) =>
-
-        course._id === action.payload._id ? action.payload : course
-
+      const updatedCourse = action.payload;
+      const courseIndex = state.courseData.findIndex(
+        (course) => course._id === updatedCourse._id
       );
 
-    },
+      if (!updatedCourse.published) {
+        state.courseData = state.courseData.filter(
+          (course) => course._id !== updatedCourse._id
+        );
+      } else if (courseIndex === -1) {
+        state.courseData.unshift(updatedCourse);
+      } else {
+        state.courseData[courseIndex] = updatedCourse;
+      }
 
+    },
+    setSelectedCourse:(state,action)=>{
+      state.selectedCourse=action.payload
+    },
     removeCourse: (state, action) => {
 
       state.courseData = state.courseData.filter(
@@ -39,7 +50,7 @@ const courseSlice = createSlice({
 });
 
 export const {
-
+  setSelectedCourse,
   setCreatorCourseData,
 
   setCourseData,
