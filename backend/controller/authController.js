@@ -40,10 +40,15 @@ export const signUp = async (req, res) => {
     let token = genToken(user._id);
 
     res.cookie("token", token, {
+
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+    
+      secure: true,
+    
+      sameSite: "None",
+    
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    
     });
 
     return res.status(201).json({
@@ -86,10 +91,15 @@ export const login = async (req, res) => {
     let token = genToken(user._id);
 
     res.cookie("token", token, {
+
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+    
+      secure: true,
+    
+      sameSite: "None",
+    
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    
     });
 
     return res.status(200).json({
@@ -236,11 +246,16 @@ export const googleAuth = async (req, res) => {
     let token = genToken(user._id)
 
     res.cookie("token", token, {
+
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+    
+      secure: true,
+    
+      sameSite: "None",
+    
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    
+    });
 
     return res.status(200).json({
       message: "Google auth successful",
