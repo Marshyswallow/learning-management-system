@@ -22,7 +22,7 @@ import EditLecture from './pages/Educator/EditLecture';
 import ViewCourses from './pages/ViewCourses';
 import ViewLectures from './pages/ViewLectures';
 
-export const serverUrl = "http://localhost:8000/";
+export const serverUrl = import.meta.serverUrl || "http://localhost:8000/";
 
 function App() {
 
