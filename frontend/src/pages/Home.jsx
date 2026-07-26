@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from "../component/Nav";
-import Home from "../assets/Home1.jpg";
+import home from "../assets/home.jpg"
 import SearchAi from "../assets/SearchAi.png";
 import Logo from "../component/Logos";
 import ExploreCourses from"../component/ExploreCourses"
