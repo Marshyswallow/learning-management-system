@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Course from "../model/courseModel.js";
 import Lecture from "../model/lectureModel.js"
+import User from "../model/userModel.js";
 
 // For Lecture
 
@@ -37,14 +38,31 @@ export const createLecture = async(req,res)=>{
 export const getCourseLecture = async (req,res) => {
   try {
     const {courseId} = req.params
-    const course = await Course.findById(courseId)
+    const course = await Course.findById(courseId).populate([
+      { path: "lectures" },
+      { path: "creator", select: "name email description photoUrl role" },
+    ])
 
     if(!course){
       return res.status(404).json({message:"course is not found"})
     }
 
-   await course.populate("lectures")
-   await course.save()
+    const user = await User.findById(req.userId).select("enrolledCourses");
+    const creatorIds = course.creator.map((creator) => String(creator._id));
+    const isCourseCreator = creatorIds.includes(String(req.userId));
+    const isEnrolled = user?.enrolledCourses.some(
+      (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
+    );
+
+    // Only preview lectures are exposed before enrolment. Do not return paid
+    // lecture video URLs to a user who has not enrolled in the course.
+    if (!isCourseCreator && !isEnrolled) {
+      course.lectures.forEach((lecture) => {
+        if (!lecture.isPreviewFree) {
+          lecture.videoUrl = undefined;
+        }
+      });
+    }
 
    return res.status(200).json(course)
   } catch (error) {
@@ -70,7 +88,7 @@ export const editLecture = async (req,res) => {
     if(lectureTitle){
       lecture.lectureTitle = lectureTitle
     }
-    lecture.isPreviewFree=isPreviewFree
+    lecture.isPreviewFree = isPreviewFree === "true" || isPreviewFree === true;
 
     await lecture.save()
     return res.status(200).json(lecture)

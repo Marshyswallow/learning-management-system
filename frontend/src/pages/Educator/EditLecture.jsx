@@ -54,7 +54,7 @@ function EditLecture() {
     const existingLecture = lectureData?.find((l) => l._id === lectureId);
     if (existingLecture) {
       setLectureTitle(existingLecture.lectureTitle || "");
-      setIsFree(existingLecture.isFree || false);
+      setIsFree(existingLecture.isPreviewFree || false);
     }
   }, [lectureData, lectureId]);
 
@@ -64,7 +64,7 @@ function EditLecture() {
     try {
       const formData = new FormData();
       formData.append("lectureTitle", lectureTitle);
-      formData.append("isFree", isFree);
+      formData.append("isPreviewFree", isFree);
       if (videoFile) {
         formData.append("videoUrl", videoFile); // matches upload.single("videoUrl")
       }

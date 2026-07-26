@@ -51,6 +51,7 @@ const courseSlice = createSlice({
 
 export const {
   setSelectedCourse,
+
   setCreatorCourseData,
 
   setCourseData,

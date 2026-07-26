@@ -22,7 +22,10 @@ export const createCourse = async (req, res) => {
 
 export const getPublishedCourse = async (req, res) => {
   try {
-    const courses = await Course.find({ published: true });
+    const courses = await Course.find({ published: true }).populate(
+      "creator",
+      "name email description photoUrl role"
+    );
 
     // An empty array is a valid result when no courses have been published yet.
     return res.status(200).json(courses);
@@ -100,7 +103,10 @@ export const getCourseById = async (req, res) => {
   try {
     const { courseId } = req.params;
 
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate(
+      "creator",
+      "name email description photoUrl role"
+    );
 
     if (!course) {
       return res.status(404).json({

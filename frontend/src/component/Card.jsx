@@ -9,7 +9,7 @@ function Card({ thumbnail,title ,category,price,id }) {
   
   return (
     <div className="max-w-sm w-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border-gray-300">
-      <img src={thumbnail} alt="" className="w-full h-48 object-cover" onClick={()=>navigate(`viewcourses/${id}`)}/>
+      <img src={thumbnail} alt={title} className="w-full h-48 object-cover cursor-pointer" onClick={()=>navigate(`/viewcourses/${id}`)}/>
 
       <div className="p-5 space-y-2"> 
         <h2 className="text-lg font-semibold text-gray-900">{title}</h2>

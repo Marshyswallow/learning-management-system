@@ -7,6 +7,7 @@ import cors from "cors"
 import userRouter from './route/userRoute.js';
 import courseRouter from './route/courseRoute.js';
 import lectureRouter from "./route/lectureRoute.js";
+import orderRouter from "./route/orderRoute.js";
 
 
 
@@ -30,6 +31,7 @@ app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 app.use("/api/course",courseRouter)
 app.use("/api/lecture", lectureRouter);
+app.use("/api/order", orderRouter);
 
 app.get("/", (req, res) => {
   res.send("hello from server");
