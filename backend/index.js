@@ -48,7 +48,6 @@ app.get("/", (req, res) => {
   res.send("hello from server");
 });
 
-app.listen(port, () => {
-  console.log("server started");
-  connectDb();
-});
+connectDb();
+
+export default app;
