@@ -1,4 +1,3 @@
-import React from "react";
 import Nav from "../component/Nav";
 import home from "../assets/home1.jpg"
 import SearchAi from "../assets/SearchAi.png";

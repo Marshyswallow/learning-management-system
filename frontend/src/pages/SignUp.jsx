@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import logo from "../assets/logo.jpg";
 import google from "../assets/google.jpg"
 import { IoEyeOutline } from "react-icons/io5";
@@ -44,7 +44,6 @@ function SignUp() {
   const googleSignUp = async()=>{
     try {
       const response= await signInWithPopup(auth,provider)
-      console.log(response)
       const user=response.user
       const name=user.displayName
       const email=user.email
@@ -54,7 +53,7 @@ function SignUp() {
       toast.success("Signup successful")
       navigate("/")
     } catch (error) {
-      toast.error(error.response?.data?.message || "Google signup failed")
+      toast.error(error.response?.data?.message || error.message || "Google signup failed")
     }
   }
   return (
@@ -103,10 +102,10 @@ function SignUp() {
           <div className='w-[25%] h-[0.5px] bg-[#c4c4c4]'></div>
         </div>
 
-        <div className='w-[80%] h-[40px] border-1 border-[black] rounded-[5px] flex items-center justify-center ' onClick={googleSignUp}>
+        <button type="button" className='w-[80%] h-[40px] border-1 border-[black] rounded-[5px] flex items-center justify-center cursor-pointer' onClick={googleSignUp}>
           <img src={google} className='w-[25px]' alt="" />
           <span className='text-[18px] text-gray-500'>oogle</span>
-        </div>
+        </button>
 
         <div className='text-[#6f6f6f]'>already have an account?
           <span className='ml-2 underline underline-offset-1 text-[black] cursor-pointer' onClick={()=>navigate("/login")}>Login</span>

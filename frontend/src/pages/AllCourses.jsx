@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Nav from "../component/Nav";
 import { FaArrowLeft } from "react-icons/fa";
@@ -9,10 +9,7 @@ import Card from "../component/Card";
 function AllCourses() {
   const navigate = useNavigate();
   const { courseData } = useSelector((state) => state.course);
-  console.log(courseData)
   const [category,setCategory]=useState([])
-
-  const [filterCourses,setFilterCourses]=useState([])
   const [isSidebarVisible,setIsSidebarVisible]=useState(false)
 
   const toggleCategory = (e)=>{
@@ -24,25 +21,9 @@ function AllCourses() {
     }
   }
 
-  const applyFilter = () => {
-    let courseCopy = courseData ? [...courseData] : [];
-  
-    if (category.length > 0) {
-      courseCopy = courseCopy.filter((c) =>
-        category.includes(c.category)
-      );
-    }
-  
-    setFilterCourses(courseCopy);
-  };
-
-  useEffect(()=>{
-    setFilterCourses(courseData)
-  },[courseData])
-
-  useEffect(()=>{
-    applyFilter()
-  },[category])
+  const filterCourses = (courseData ?? []).filter(
+    (course) => category.length === 0 || category.includes(course.category)
+  );
 
   return (
     <div className="flex min-h-screen bg-gray-50">

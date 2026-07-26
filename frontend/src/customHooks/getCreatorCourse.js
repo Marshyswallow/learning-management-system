@@ -18,7 +18,7 @@ function useGetCreatorCourse() {
       }
     }
     creatorCourses()
-  }, [])
+  }, [dispatch])
 }
 
 export default useGetCreatorCourse

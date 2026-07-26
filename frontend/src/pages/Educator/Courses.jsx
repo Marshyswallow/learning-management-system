@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../../App";
 import axios from "axios";
@@ -13,7 +12,6 @@ import { useDispatch } from "react-redux";
 function Courses() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [course, setCourses] = useState([]);
   const { creatorCourseData } = useSelector((state) => state.course);
   const { userData } = useSelector((state) => state.user);
   useEffect(() => {

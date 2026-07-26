@@ -1,4 +1,3 @@
-import React from 'react'
 import { MdCastForEducation } from "react-icons/md";
 import { SiOpenaccess } from "react-icons/si";
 import { FaSackDollar } from "react-icons/fa6";

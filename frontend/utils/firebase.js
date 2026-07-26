@@ -13,10 +13,17 @@ const firebaseConfig = {
   appId: "1:111856022057:web:1691ecfd9853bcd5952238"
 };
 
+if (!firebaseConfig.apiKey) {
+  throw new Error(
+    "Missing VITE_FIREBASE_APIKEY. Add it to the frontend Vercel project's environment variables."
+  );
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const auth=getAuth(app)
 const provider=new GoogleAuthProvider()
+provider.setCustomParameters({ prompt: "select_account" });
 
 export {auth,provider}

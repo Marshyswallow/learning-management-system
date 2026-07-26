@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { FaArrowLeft, FaRegEdit } from "react-icons/fa";
@@ -63,7 +63,7 @@ function CreateLecture() {
       }
     };
     getCourseLecture();
-  }, [courseId]);
+  }, [courseId, dispatch]);
 
   return (
 

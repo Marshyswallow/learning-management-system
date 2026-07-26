@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Card from './Card';
 
 function CardPage() {
   const { courseData } = useSelector((state) => state.course);
-  const [popularCourses, setPopularCourse] = useState([]);
-
-  useEffect(() => {
-    console.log(courseData);
-    if (courseData) {
-      setPopularCourse(courseData.slice(0, 6));
-    }
-  }, [courseData]);
+  const popularCourses = courseData?.slice(0, 6) ?? [];
 
 
 

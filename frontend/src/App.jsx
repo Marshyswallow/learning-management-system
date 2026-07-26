@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
@@ -21,8 +20,11 @@ import CreateLecture from './pages/Educator/CreateLecture';
 import EditLecture from './pages/Educator/EditLecture';
 import ViewCourses from './pages/ViewCourses';
 import ViewLectures from './pages/ViewLectures';
-export const serverUrl =
+const configuredServerUrl =
   import.meta.env.VITE_SERVER_URL || "http://localhost:8000/";
+export const serverUrl = configuredServerUrl.endsWith("/")
+  ? configuredServerUrl
+  : `${configuredServerUrl}/`;
 
 function App() {
 

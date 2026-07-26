@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
   FaArrowLeft,
@@ -40,7 +40,7 @@ function ViewCourses() {
           { withCredentials: true }
         );
         setCourse(response.data);
-      } catch (error) {
+      } catch {
         // Keep the page usable with the published-course data if lecture loading fails.
         setCourse(courseData.find((item) => item._id === courseId) || null);
       } finally {
