@@ -6,11 +6,11 @@ import {getAuth, GoogleAuthProvider} from "firebase/auth"
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "loginecourses.firebaseapp.com",
-  projectId: "loginecourses",
-  storageBucket: "loginecourses.firebasestorage.app",
-  messagingSenderId: "111856022057",
-  appId: "1:111856022057:web:1691ecfd9853bcd5952238"
+  authDomain: "logine-courses.firebaseapp.com",
+  projectId: "logine-courses",
+  storageBucket: "logine-courses.firebasestorage.app",
+  messagingSenderId: "741192753118",
+  appId: "1:741192753118:web:808917c52419c0d549c74f"
 };
 
 if (!firebaseConfig.apiKey) {
