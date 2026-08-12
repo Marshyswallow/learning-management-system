@@ -1,13 +1,40 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FaRegEdit } from "react-icons/fa";
 import img from "../../assets/empty.jpg";
+import { serverUrl } from "../../App";
+import axios from "axios";
+import { setCreatorCourseData } from "../../redux/courseSlice";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [fetching, setFetching] = useState(true);
 
   const { userData } = useSelector((state) => state.user);
   const { creatorCourseData } = useSelector((state) => state.course);
+
+  useEffect(() => {
+    if (!userData) return;
+    const fetchCourses = async () => {
+      setFetching(true);
+      try {
+        const result = await axios.get(
+          `${serverUrl}api/course/creatorCourses`,
+          { withCredentials: true }
+        );
+        dispatch(setCreatorCourseData(result.data));
+      } catch (error) {
+        console.log("Dashboard fetch error:", error);
+        toast.error(error.response?.data?.message || "Failed to load courses");
+      } finally {
+        setFetching(false);
+      }
+    };
+    fetchCourses();
+  }, [userData, dispatch]);
 
   const totalCourses = creatorCourseData?.length || 0;
 
@@ -18,7 +45,8 @@ function Dashboard() {
 
   const totalEarning =
     creatorCourseData?.reduce(
-      (sum, course) => sum + (course.price || 0),
+      (sum, course) =>
+        sum + (Number(course.price) || 0) * (course.enrolledStudents?.length || 0),
       0
     ) || 0;
 
@@ -106,6 +134,9 @@ function Dashboard() {
         </div>
 
         <div className="hidden md:block overflow-x-auto">
+          {fetching ? (
+            <div className="text-center py-8 text-gray-500">Loading courses...</div>
+          ) : (
           <table className="min-w-full text-sm">
             <thead className="border-b bg-gray-50">
               <tr>
@@ -173,11 +204,14 @@ function Dashboard() {
               )}
             </tbody>
           </table>
+          )}
         </div>
 
         {/* Mobile View */}
         <div className="md:hidden flex flex-col gap-4">
-          {creatorCourseData?.length > 0 ? (
+          {fetching ? (
+            <div className="text-center py-8 text-gray-500">Loading courses...</div>
+          ) : creatorCourseData?.length > 0 ? (
             creatorCourseData.map((course) => (
               <div
                 key={course._id}

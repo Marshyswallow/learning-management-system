@@ -160,7 +160,7 @@ function EditCourse() {
             <h1 className="text-2xl font-semibold">Edit Course</h1>
           </div>
           <button
-            onClick={() => navigate(`/createlecture/${selectCourse._id}`)}
+            onClick={() => navigate(`/createlecture/${courseId}`)}
             className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800"
           >
             Go to Lectures
@@ -317,6 +317,7 @@ function EditCourse() {
             </button>
             <button
               onClick={handleEditCourse}
+              disabled={loading || !selectCourse}
               className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
             >
               {loading ? <ClipLoader size={30} color="white" /> : "save"}

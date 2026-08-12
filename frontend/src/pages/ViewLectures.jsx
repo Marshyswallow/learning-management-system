@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaArrowLeft, FaPlayCircle } from "react-icons/fa";
+import { FaArrowLeft, FaLock, FaPlayCircle } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { serverUrl } from "../App";
 import img from "../assets/empty.jpg";
 
@@ -11,6 +12,7 @@ function ViewLectures() {
   const [course, setCourse] = useState(null);
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { userData } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -44,7 +46,14 @@ function ViewLectures() {
     );
   }
 
-  const lectures = course.lectures || [];
+  const instructorId = Array.isArray(course.creator) ? course.creator[0]?._id : course.creator?._id || course.creator;
+  const isCourseCreator = String(instructorId) === String(userData?._id);
+  const isEnrolled = userData?.enrolledCourses?.some(
+    (enrolledCourse) => String(enrolledCourse?._id || enrolledCourse) === String(courseId)
+  );
+  const lectures = isCourseCreator || isEnrolled
+    ? course.lectures || []
+    : (course.lectures || []).filter((lecture) => lecture.isPreviewFree && lecture.videoUrl);
   const instructor = Array.isArray(course.creator) ? course.creator[0] : course.creator;
 
   return (
@@ -67,10 +76,13 @@ function ViewLectures() {
                   Your browser does not support video playback.
                 </video>
               ) : (
-                <div className="flex aspect-video items-center justify-center text-center text-gray-300">Select a lecture to start watching</div>
+                <div className="flex aspect-video flex-col items-center justify-center gap-3 p-6 text-center text-gray-300">
+                  <FaLock className="text-2xl" />
+                  <span>This video is available after enrolling in the course.</span>
+                </div>
               )}
             </div>
-            <h2 className="mt-5 text-lg font-semibold text-gray-700">{selectedLecture?.lectureTitle || "No lecture selected"}</h2>
+          <h2 className="mt-5 text-lg font-semibold text-gray-700">{selectedLecture?.lectureTitle || "No lecture selected"}</h2>
           </section>
 
           <aside className="h-fit rounded-2xl border border-gray-100 p-6 shadow-md">
@@ -82,8 +94,11 @@ function ViewLectures() {
                   onClick={() => setSelectedLecture(lecture)}
                   className={`flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left font-medium transition ${selectedLecture?._id === lecture._id ? "border-gray-400 bg-gray-100" : "border-gray-200 hover:bg-gray-50"}`}
                 >
-                  <span>{lecture.lectureTitle || `Lecture ${index + 1}`}</span>
-                  <FaPlayCircle className="text-lg text-black" />
+                  <span>
+                    {lecture.lectureTitle || `Lecture ${index + 1}`}
+                    {!isEnrolled && !isCourseCreator && <small className="ml-2 text-green-600">Preview</small>}
+                  </span>
+                  {lecture.videoUrl ? <FaPlayCircle className="text-lg text-black" /> : <FaLock className="text-gray-400" />}
                 </button>
               ))}
               {!lectures.length && <p className="text-sm text-gray-500">No lectures available.</p>}

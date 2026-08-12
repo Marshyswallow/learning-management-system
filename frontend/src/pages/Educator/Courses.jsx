@@ -5,9 +5,9 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import img from "../../assets/empty.jpg";
 import { FaRegEdit } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setCreatorCourseData } from "../../redux/courseSlice";
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 function Courses() {
   const dispatch = useDispatch();
@@ -24,11 +24,10 @@ function Courses() {
           { withCredentials: true }
         );
   
-        console.log("Fetched Courses:", result.data);
-  
         dispatch(setCreatorCourseData(result.data));
       } catch (error) {
-        console.log(error);
+        console.log("Courses fetch error:", error);
+        toast.error(error.response?.data?.message || "Failed to load courses");
       }
     };
   

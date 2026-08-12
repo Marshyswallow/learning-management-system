@@ -1,48 +1,61 @@
 import Nav from "../component/Nav";
-import home from "../assets/home1.jpg"
-import SearchAi from "../assets/SearchAi.png";
+import home from "../assets/home1.jpg";
 import Logo from "../component/Logos";
-import ExploreCourses from"../component/ExploreCourses"
+import ExploreCourses from "../component/ExploreCourses";
 import CardPage from "../component/CardPage";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   return (
-    <div className="w-[100%] overflow-hidden">
-      <div className="w-[100%] lg:h-[140vh] h-[70vh] relative">
+    <div className="min-h-screen overflow-hidden bg-[#fafafa] text-gray-900">
+      <section className="relative min-h-[620px] overflow-hidden bg-gray-950">
         <Nav />
         <img
           src={home}
-          alt="home"
-          className="object-cover md:object-fill w-[100%] lg:h-[100%] h-[50vh]"
+          alt="Students learning together"
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/90 via-gray-950/55 to-gray-950/20" />
 
-        <span className="lg:text-[70px] text-[20px] md:text-[40px] absolute lg:top-[10%] top-[12%] w-[100%] flex items-center justify-center text-white font-bold">
-          Grow Your Skills To Advance
-        </span>
-
-        <span className="lg:text-[70px] text-[20px] md:text-[40px] absolute lg:top-[18%] top-[20%] w-[100%] flex items-center justify-center text-white font-bold">
-          Your Career Path
-        </span>
-
-        <div className="absolute lg:top-[30%] top-[75%] md:top-[80%] w-[100%] flex items-center justify-center gap-3 flex-wrap">
-          <button className="px-[20px] py-[10px] border-2 lg:border-white border-black lg:text-white text-black rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer" onClick={()=>navigate("/allcourses")}>
-            View All Courses
-          </button>
-          <button className="px-[20px] py-[10px] lg:bg-white bg-black lg:text-black text-white rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer items-center justify-center">
-            Search With Ai
-            <img
-              src={SearchAi}
-              alt="ai"
-              className="w-[25px] h-[25px] rounded-full"
-            />
-          </button>
+        <div className="relative mx-auto flex min-h-[620px] max-w-6xl items-center px-6 pb-12 pt-28 sm:px-10 lg:px-12">
+          <div className="max-w-2xl text-white">
+            <p className="mb-5 text-sm font-medium uppercase tracking-[0.25em] text-white/70">
+              Learn with purpose
+            </p>
+            <h1 className="max-w-xl text-4xl font-semibold leading-tight sm:text-6xl">
+              Build skills that move you forward.
+            </h1>
+            <p className="mt-6 max-w-lg text-base leading-7 text-white/75 sm:text-lg">
+              Practical courses, clear lessons, and the confidence to take your
+              next step in your career.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                onClick={() => navigate("/allcourses")}
+                className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-gray-950 transition hover:bg-gray-200"
+              >
+                Browse courses
+              </button>
+              <button
+                onClick={() => navigate("/signup")}
+                className="rounded-lg border border-white/60 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
+              >
+                Start learning
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <Logo/>
-      <ExploreCourses/>
-      <CardPage/>
+      </section>
+
+      <main>
+        <div className="border-b border-gray-200 bg-white px-6 py-6 sm:px-10">
+          <Logo />
+        </div>
+        <ExploreCourses />
+        <CardPage />
+      </main>
     </div>
   );
 }

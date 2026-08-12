@@ -8,8 +8,11 @@ function CardPage() {
 
 
   return (
-    <div className="relative flex items-center justify-center flex-col">
-      <h1 className="md:text-[45px] text-[30px] font-semibold text-center mt-[30px] px-[20px]">
+    <section className="relative flex flex-col items-center justify-center bg-[#fafafa] px-6 py-20">
+      <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+        Start learning today
+      </p>
+      <h1 className="mt-3 text-center text-3xl font-semibold md:text-4xl">
         Our Popular Courses
       </h1>
 
@@ -17,7 +20,7 @@ function CardPage() {
         Explore top-rated courses to enhance your skills and accelerate your learning.
       </span>
 
-      <div className="w-full min-h-screen flex items-center justify-center flex-wrap gap-[50px] lg:p-[50px] md:p-[30px] p-[10px] mb-[40px]">
+      <div className="flex w-full max-w-6xl flex-wrap items-start justify-center gap-6 pt-10">
         {popularCourses?.map((course, index) => (
           <Card
             key={index}
@@ -29,8 +32,7 @@ function CardPage() {
           />
         ))}
       </div>
-
-    </div>
+    </section>
   );
 }
 

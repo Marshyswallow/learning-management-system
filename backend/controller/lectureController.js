@@ -3,6 +3,15 @@ import Course from "../model/courseModel.js";
 import Lecture from "../model/lectureModel.js"
 import User from "../model/userModel.js";
 
+const getCreatorId = (creator) =>
+  String(Array.isArray(creator) ? creator[0]?._id || creator[0] : creator?._id || creator);
+
+const getOwnedCourse = async (courseId, userId) => {
+  const course = await Course.findById(courseId).populate("creator");
+  if (!course || getCreatorId(course.creator) !== String(userId)) return null;
+  return course;
+};
+
 // For Lecture
 
 export const createLecture = async(req,res)=>{
@@ -15,8 +24,10 @@ export const createLecture = async(req,res)=>{
     });
 }
 
+   const course = await getOwnedCourse(courseId, req.userId);
+   if (!course) return res.status(403).json({ message: "Only the course educator can manage lectures" });
+
    const lecture = await Lecture.create({lectureTitle})
-   const course = await Course.findById(courseId)
 
    if(course){
     course.lectures.push(lecture._id)
@@ -48,9 +59,8 @@ export const getCourseLecture = async (req,res) => {
     }
 
     const user = await User.findById(req.userId).select("enrolledCourses");
-    const creatorIds = course.creator.map((creator) => String(creator._id));
-    const isCourseCreator = creatorIds.includes(String(req.userId));
-    const isEnrolled = user?.enrolledCourses.some(
+     const isCourseCreator = getCreatorId(course.creator) === String(req.userId);
+    const isEnrolled = user?.enrolledCourses?.some(
       (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
     );
 
@@ -76,10 +86,14 @@ export const editLecture = async (req,res) => {
   try {
     const {lectureId} = req.params
     const {isPreviewFree, lectureTitle}=req.body
-    const lecture = await Lecture.findById(lectureId)
-    if(!lecture){
-      return res.status(404).json({message:"Lecture is not found"})
-    }
+     const lecture = await Lecture.findById(lectureId)
+     if(!lecture){
+       return res.status(404).json({message:"Lecture is not found"})
+     }
+     const course = await Course.findOne({ lectures: lectureId }).populate("creator");
+     if (!course || getCreatorId(course.creator) !== String(req.userId)) {
+       return res.status(403).json({ message: "Only the course educator can manage lectures" });
+     }
     let videoUrl
     if(req.file){
       videoUrl = await uploadOnCloudinary(req.file.path)
@@ -104,13 +118,18 @@ export const removeLecture = async (req,res) => {
     const {lectureId} = req.params
     const lecture = await Lecture.findById(lectureId)
 
-    if(!lecture){
-      return res.status(404).json({message:"lecture not found"})
-    }
+     if(!lecture){
+       return res.status(404).json({message:"lecture not found"})
+     }
+     const course = await Course.findOne({ lectures: lectureId }).populate("creator");
+     if (!course || getCreatorId(course.creator) !== String(req.userId)) {
+       return res.status(403).json({ message: "Only the course educator can manage lectures" });
+     }
     await Course.updateOne(
       {lectures:lectureId},
       {$pull:{lectures:lectureId}}
     )
+    await Lecture.findByIdAndDelete(lectureId);
 
     return res.status(200).json({message:"lecture is removed"})
   } catch (error) {

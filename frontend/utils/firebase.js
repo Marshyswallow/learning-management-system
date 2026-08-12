@@ -1,29 +1,18 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import {getAuth, GoogleAuthProvider} from "firebase/auth"
-// Your web app's Firebase configuration
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "logine-courses.firebaseapp.com",
-  projectId: "logine-courses",
-  storageBucket: "logine-courses.firebasestorage.app",
-  messagingSenderId: "741192753118",
-  appId: "1:741192753118:web:808917c52419c0d549c74f"
+  apiKey: "AIzaSyC9ZP-phIXe-XTdN5mZ7KHWRSP2_e6beDc",
+  authDomain: "learningmanagementsystem-5880b.firebaseapp.com",
+  projectId: "learningmanagementsystem-5880b",
+  storageBucket: "learningmanagementsystem-5880b.firebasestorage.app",
+  messagingSenderId: "386155582318",
+  appId: "1:386155582318:web:f72fb186843c251bd5a77f",
+  measurementId: "G-E67E5MVRVP"
 };
 
-if (!firebaseConfig.apiKey) {
-  throw new Error(
-    "Missing VITE_FIREBASE_APIKEY. Add it to the frontend Vercel project's environment variables."
-  );
-}
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const auth=getAuth(app)
-const provider=new GoogleAuthProvider()
-provider.setCustomParameters({ prompt: "select_account" });
-
-export {auth,provider}
+const analytics = getAnalytics(app);
+export const auth = getAuth(app);
+export const provider = new GoogleAuthProvider();

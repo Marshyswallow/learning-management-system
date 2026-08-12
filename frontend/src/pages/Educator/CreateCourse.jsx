@@ -24,18 +24,22 @@ function CreateCourse() {
   ]
 
   const handleCreate = async () => {
+    if (!title.trim() || !category) {
+      toast.error("Title and category are required")
+      return
+    }
     setLoading(true)
     try {
       const result = await axios.post(
         serverUrl + "api/course/create",
-        { title, category },
+        { title, category, description: "" },
         { withCredentials: true }
       )
       console.log(result.data)
-      toast.success("course created")
-      navigate("/courses") // optional: redirect after success
+      toast.success("Course created successfully")
+      navigate("/courses")
     } catch (error) {
-      console.log(error)
+      console.log("Create course error:", error)
       toast.error(error.response?.data?.message || "Failed to create course")
     } finally {
       setLoading(false)

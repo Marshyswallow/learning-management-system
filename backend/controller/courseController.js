@@ -1,9 +1,14 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Course from "../model/courseModel.js";
+import User from "../model/userModel.js";
 
 
 export const createCourse = async (req, res) => {
   try {
+    const user = await User.findById(req.userId).select("role");
+    if (user?.role !== "educator") {
+      return res.status(403).json({ message: "Only educators can create courses" });
+    }
     const { title, category, description } = req.body;
     if (!title || !category) {
       return res.status(400).json({ message: "title or category is required" });
@@ -39,15 +44,14 @@ export const getPublishedCourse = async (req, res) => {
 export const getCreatorCourses = async (req, res) => {
   try {
     const userId = req.userId;
-    const courses = await Course.find({ creator: userId });
-    if (!courses) {
-      return res.status(400).json({ message: `courses is not found` });
-    }
-    return res.status(200).json(courses);
+    const courses = await Course.find({
+      creator: userId
+    });
+    return res.status(200).json(courses || []);
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `failed to find creator courses${error}` });
+      .json({ message: `failed to find creator courses ${error}` });
   }
 };
 
@@ -66,31 +70,25 @@ export const editCourse = async (req, res) => {
     if (!course) {
       return res.status(400).json({ message: "Course is not found" });
     }
+    const creatorId = Array.isArray(course.creator) ? course.creator[0] : course.creator;
+    if (String(creatorId) !== String(req.userId)) {
+      return res.status(403).json({ message: "Only the course educator can edit this course" });
+    }
 
-    const updateData = {
-      title,
-
-      subTitle,
-
-      description,
-
-      category,
-
-      published,
-
-      level,
-
-      price,
-    };
+    const updateData = {};
+    for (const [key, value] of Object.entries({
+      title, subTitle, description, category, published, level, price,
+    })) {
+      if (value !== undefined) updateData[key] = value;
+    }
 
     if (thumbnail) {
       updateData.thumbnail = thumbnail;
     }
 
-    course = await Course.findByIdAndUpdate(courseId, updateData,  {
-
-      returnDocument: "after",
-  
+    course = await Course.findByIdAndUpdate(courseId, updateData, {
+      new: true,
+      runValidators: true,
     });
 
     return res.status(200).json(course);
@@ -128,6 +126,10 @@ export const removeCourse = async (req, res) => {
     let course = await Course.findById(courseId);
     if (!course) {
       return res.status(400).json({ message: `Course is not found` });
+    }
+    const creatorId = Array.isArray(course.creator) ? course.creator[0] : course.creator;
+    if (String(creatorId) !== String(req.userId)) {
+      return res.status(403).json({ message: "Only the course educator can delete this course" });
     }
     course = await Course.findByIdAndDelete(courseId, {
       returnDocument: "after",
