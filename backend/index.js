@@ -15,8 +15,12 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5174",
+  "https://learning-management-system-ebon-xi.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
+
+console.log("Allowed CORS origins:", allowedOrigins);
 
 app.use(
   cors({
@@ -24,6 +28,8 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
+
+      console.log("Blocked CORS origin:", origin);
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
