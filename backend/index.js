@@ -16,7 +16,6 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://learning-management-system-ebon-xi.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -24,15 +23,18 @@ console.log("Allowed CORS origins:", allowedOrigins);
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+      origin: (origin, callback) => {
+          console.log("Incoming request origin:", origin);
 
-      console.log("Blocked CORS origin:", origin);
-      callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
+          if (!origin || allowedOrigins.includes(origin)) {
+              console.log("CORS allowed:", origin);
+              return callback(null, true);
+          }
+
+          console.log("CORS BLOCKED:", origin);
+          callback(new Error(`Not allowed by CORS: ${origin}`));
+      },
+      credentials: true,
   })
 );
 
