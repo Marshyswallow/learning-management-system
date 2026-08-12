@@ -13,6 +13,9 @@ dotenv.config();
 
 const app = express();
 
+// Render terminates HTTPS before forwarding requests to Express.
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
