@@ -55,14 +55,14 @@ function Nav() {
               onClick={() => setShow((prev) => !prev)}
             />
           )}
-          {userData?.photoUrl ? <img src={userData.photoUrl} className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer" onClick={() => setShow((prev) => !prev)}/>:
+          {userData && (userData.photoUrl ? <img src={userData.photoUrl} className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer" onClick={() => setShow((prev) => !prev)}/>:
             <div
               className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer"
               onClick={() => setShow((prev) => !prev)}
             >
-              {userData?.name?.slice(0, 1).toUpperCase()}
+              {userData.name.slice(0, 1).toUpperCase()}
             </div>
-          }
+          )}
           {userData?.role === "educator" && (
             <div className="px-[20px] py-[6px] border-2 border-white text-white rounded-[10px] text-[16px] font-light cursor-pointer hover:bg-white hover:text-black transition-all duration-200 bg-[#000000d5]" onClick={()=>navigate("/dashboard")}>
               Dashboard
@@ -121,11 +121,11 @@ function Nav() {
               onClick={() => setShow((prev) => !prev)}
             />
           )}
-          {userData?.photoUrl ? <img src={userData.photoUrl}  className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer"/>:
+          {userData && (userData.photoUrl ? <img src={userData.photoUrl}  className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer"/>:
             <div className="w-[40px] h-[40px] rounded-full bg-white text-black flex items-center justify-center font-bold text-[18px] cursor-pointer">
-              {userData?.name?.slice(0, 1).toUpperCase()}
+              {userData.name.slice(0, 1).toUpperCase()}
             </div>
-          }
+          )}
 
           
           <div className={btnClass} onClick={() => navigate("/profile")}>
