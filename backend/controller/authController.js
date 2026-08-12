@@ -5,11 +5,15 @@ import genToken from "../config/token.js";
 import sendMail from "../config/sendMail.js";
 
 const getCookieOptions = (req) => {
-  const secure = req.secure || req.headers["x-forwarded-proto"] === "https";
+  const secure = process.env.NODE_ENV === "production"
+    || req.secure
+    || req.headers["x-forwarded-proto"] === "https";
+
   return {
     httpOnly: true,
     secure,
     sameSite: secure ? "none" : "lax",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 };
@@ -49,12 +53,7 @@ export const signUp = async (req, res) => {
 
     let token = genToken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+    res.cookie("token", token, getCookieOptions(req));
 
     return res.status(201).json({
       message: "Signup successful",
@@ -95,12 +94,7 @@ export const login = async (req, res) => {
 
     let token = genToken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+    res.cookie("token", token, getCookieOptions(req));
 
     return res.status(200).json({
       message: "Login successful",
