@@ -47,14 +47,14 @@ app.use("/api/order", orderRouter);
 const PORT = process.env.PORT || 8000;
 
 connectDb()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server listening on ${PORT}`);
+    .then(() => {
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server listening on ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error("MongoDB connection failed:");
+        console.error(err);
     });
-  })
-  .catch((err) => {
-    console.error("MongoDB connection failed:");
-    console.error(err);
-  });
 
 export default app;
