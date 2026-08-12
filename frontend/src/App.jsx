@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
@@ -21,8 +20,13 @@ import CreateLecture from './pages/Educator/CreateLecture';
 import EditLecture from './pages/Educator/EditLecture';
 import ViewCourses from './pages/ViewCourses';
 import ViewLectures from './pages/ViewLectures';
-
-export const serverUrl = "http://localhost:8000/";
+import StudentCourses from './pages/StudentCourses';
+import Footer from './component/Footer';
+const configuredServerUrl =
+  import.meta.env.VITE_SERVER_URL || "http://localhost:8000/";
+export const serverUrl = configuredServerUrl.endsWith("/")
+  ? configuredServerUrl
+  : `${configuredServerUrl}/`;
 
 function App() {
 
@@ -48,6 +52,8 @@ function App() {
   return (
     <>
       <ToastContainer />
+      <div className="flex min-h-screen flex-col">
+      <main className="flex-1">
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/signup' element={!userData ? <SignUp /> : <Navigate to={"/"} />} />
@@ -56,7 +62,7 @@ function App() {
         <Route path='/forget' element={<ForgetPass />} />
         <Route path='/edit-profile' element={<EditProfile />}></Route>
         <Route path='/dashboard' element={userData?.role === "educator" ? <Dashboard /> : <Navigate to={"/signup"} />}></Route>
-        <Route path='/courses' element={userData?.role === "educator" ? <Courses /> : <Navigate to={"/signup"} />}></Route>
+        <Route path='/courses' element={userData?.role === "educator" ? <Courses /> : userData?.role === "student" ? <StudentCourses /> : <Navigate to={"/signup"} />}></Route>
         <Route path='/createcourses' element={userData?.role === "educator" ? <CreateCourses /> : <Navigate to={"/signup"} />}></Route>
         <Route path='/editcourse/:courseId' element={userData?.role === "educator" ? <EditCourse /> : <Navigate to={"/signup"} />}></Route>
         <Route path='/allcourses' element={userData ? <AllCourses /> : <Navigate to="/login" />}></Route>
@@ -66,6 +72,9 @@ function App() {
         <Route path='/viewcourses/:courseId' element={userData ? <ViewCourses /> : <Navigate to={"/login"} />}></Route>
         <Route path='/viewlectures/:courseId' element={userData ? <ViewLectures /> : <Navigate to={"/login"} />}></Route>
       </Routes>
+      </main>
+      <Footer />
+      </div>
     </>
   );
 }

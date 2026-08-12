@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import { cloneElement } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TbDeviceDesktopAnalytics,
@@ -56,53 +56,52 @@ function ExploreCourses() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full px-6 py-16 bg-white">
-      <div className="max-w-[900px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* left text */}
+    <section className="w-full bg-white px-6 py-20">
+      <div className="mx-auto max-w-[900px] grid grid-cols-1 gap-8 items-center md:grid-cols-2">
         <div>
-          <p className="text-[13px] text-gray-400 mb-2">what we offer</p>
-          <h2 className="text-[32px] font-medium leading-snug mb-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">
+            What we offer
+          </p>
+          <h2 className="mb-4 text-[32px] font-medium leading-snug">
             Explore
             <br />
             Our Courses
           </h2>
-          <p className="text-[15px] text-gray-500 leading-relaxed mb-6">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem vel
-            iure explicabo laboriosam accusantium expedita laudantium facere
-            magnam.
+          <p className="mb-6 text-[15px] leading-relaxed text-gray-500">
+            Learn from focused, practical content designed to help you make
+            steady progress, one skill at a time.
           </p>
           <button
             onClick={() => navigate("/allcourses")}
-            className="bg-black text-white px-7 py-3 rounded-xl text-[15px] flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2 rounded-xl bg-black px-7 py-3 text-[15px] text-white"
           >
             Explore courses →
           </button>
         </div>
 
-        {/* right grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
           {categories.map((cat, i) => (
             <div
               key={i}
               onClick={() => navigate("/courses")}
-              className="border border-gray-100 rounded-xl p-5 flex flex-col items-center gap-3 cursor-pointer hover:border-gray-300 transition-all"
+              className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border border-gray-100 p-5 transition-all hover:border-gray-300"
             >
               <div
-                className="w-[70px] h-[70px] rounded-lg flex items-center justify-center"
+                className="flex h-[70px] w-[70px] items-center justify-center rounded-lg"
                 style={{ background: cat.bg }}
               >
                 {cloneElement(cat.icon, {
                   style: { color: cat.color, fontSize: "32px" },
                 })}
               </div>
-              <span className="text-[13px] text-gray-500 text-center leading-snug">
+              <span className="text-center text-[13px] leading-snug text-gray-500">
                 {cat.label}
               </span>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

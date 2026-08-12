@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { FaArrowLeft, FaRegEdit } from "react-icons/fa";
@@ -63,7 +63,7 @@ function CreateLecture() {
       }
     };
     getCourseLecture();
-  }, [courseId]);
+  }, [courseId, dispatch]);
 
   return (
 
@@ -142,15 +142,24 @@ function CreateLecture() {
 
               key={index}
 
-              className="bg-gray-100 rounded-lg px-6 py-5 flex justify-between items-center hover:bg-gray-200 transition"
+              className="bg-gray-100 rounded-lg px-6 py-5 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center hover:bg-gray-200 transition"
 
             >
 
-              <h2 className="font-semibold text-lg">
-
-                Lecture - {index + 1}: {lecture.lectureTitle}
-
-              </h2>
+              <div>
+                <h2 className="font-semibold text-lg">
+                  Lecture - {index + 1}: {lecture.lectureTitle}
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  {lecture.videoUrl ? "Video uploaded" : "Video not uploaded"}
+                  {lecture.isPreviewFree ? " · Free preview" : " · Enrolled students only"}
+                </p>
+                {lecture.videoUrl && (
+                  <video controls className="mt-3 max-h-48 w-full max-w-md rounded-lg bg-black">
+                    <source src={lecture.videoUrl} />
+                  </video>
+                )}
+              </div>
 
               <button className="text-gray-700 hover:text-black">
 

@@ -4,6 +4,16 @@ import bcrypt from "bcryptjs";
 import genToken from "../config/token.js";
 import sendMail from "../config/sendMail.js";
 
+const getCookieOptions = (req) => {
+  const secure = req.secure || req.headers["x-forwarded-proto"] === "https";
+  return {
+    httpOnly: true,
+    secure,
+    sameSite: secure ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+};
+
 export const signUp = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -39,12 +49,7 @@ export const signUp = async (req, res) => {
 
     let token = genToken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    res.cookie("token", token, getCookieOptions(req));
 
     return res.status(201).json({
       message: "Signup successful",
@@ -85,12 +90,7 @@ export const login = async (req, res) => {
 
     let token = genToken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    res.cookie("token", token, getCookieOptions(req));
 
     return res.status(200).json({
       message: "Login successful",
@@ -108,11 +108,7 @@ export const login = async (req, res) => {
 export const logOut = async (req, res) => {
   try {
 
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
+    res.clearCookie("token", getCookieOptions(req));
 
     return res.status(200).json({
       message: "Logout successful"
@@ -235,12 +231,7 @@ export const googleAuth = async (req, res) => {
     // ✅ existing user — just login
     let token = genToken(user._id)
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+    res.cookie("token", token, getCookieOptions(req));
 
     return res.status(200).json({
       message: "Google auth successful",

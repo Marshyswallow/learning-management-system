@@ -18,7 +18,7 @@ function useGetCreatorCourse(courseId) {
       }
     }
     courseLecture()
-  }, [])
+  }, [courseId, dispatch])
 }
 
 export default useGetCreatorCourse

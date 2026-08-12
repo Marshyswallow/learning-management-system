@@ -1,5 +1,6 @@
 import uploadOnCloudinary from "../config/cloudinary.js"
 import User from "../model/userModel.js"
+import Course from "../model/courseModel.js"
 
 export const getCurrentUser = async (req,res)=>{
 
@@ -13,6 +14,17 @@ export const getCurrentUser = async (req,res)=>{
     return res.status(500).json({
       message: `GetCurrentUser error: ${error.message}`
     });
+  }
+}
+
+export const getEnrolledCourses = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("enrolledCourses");
+    if (!user) return res.status(404).json({ message: "user not found" });
+    const courses = await Course.find({ _id: { $in: user.enrolledCourses || [] } });
+    return res.status(200).json(courses);
+  } catch (error) {
+    return res.status(500).json({ message: `Get enrolled courses error: ${error.message}` });
   }
 }
 

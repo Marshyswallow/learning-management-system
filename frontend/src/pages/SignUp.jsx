@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import logo from "../assets/logo.jpg";
 import google from "../assets/google.jpg"
 import { IoEyeOutline } from "react-icons/io5";
@@ -16,7 +16,6 @@ import { auth,provider } from '../../utils/firebase';
 function SignUp() {
   const [show,setShow]=useState(false)
   const navigate=useNavigate();
-  const [name,setName]=useState("")
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const [role,setRole]=useState("student")
@@ -26,7 +25,7 @@ function SignUp() {
     try {
       setLoading(true)
       const result = await axios.post(serverUrl + "api/auth/signup", 
-        { name, password, email, role }, 
+        { name: email.split("@")[0], password, email, role }, 
         { withCredentials: true }
       )
       dispatch(setUserData(result.data.user)) 
@@ -44,7 +43,6 @@ function SignUp() {
   const googleSignUp = async()=>{
     try {
       const response= await signInWithPopup(auth,provider)
-      console.log(response)
       const user=response.user
       const name=user.displayName
       const email=user.email
@@ -54,7 +52,7 @@ function SignUp() {
       toast.success("Signup successful")
       navigate("/")
     } catch (error) {
-      toast.error(error.response?.data?.message || "Google signup failed")
+      toast.error(error.response?.data?.message || error.message || "Google signup failed")
     }
   }
   return (
@@ -69,11 +67,6 @@ function SignUp() {
             <h1 className='font-semibold text-[black] text-2xl'>let's get started</h1>
             <h2 className='text-[#999797] text-[18px]'>Create your account</h2>
           </div>
-          <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3'>
-          <label htmlFor="name" className='font-semibold'>Name</label>
-          <input id='name' type="text" className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder='Your name' onChange={(e)=>setName(e.target.value)} value={name}/>
-          </div>
-          
           <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3'>
          <label htmlFor="email" className='font-semibold'>Email</label>
         <input id='email' type="email" className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder='Your email' onChange={(e)=>setEmail(e.target.value)} value={email}/>
@@ -103,10 +96,10 @@ function SignUp() {
           <div className='w-[25%] h-[0.5px] bg-[#c4c4c4]'></div>
         </div>
 
-        <div className='w-[80%] h-[40px] border-1 border-[black] rounded-[5px] flex items-center justify-center ' onClick={googleSignUp}>
+        <button type="button" className='w-[80%] h-[40px] border-1 border-[black] rounded-[5px] flex items-center justify-center cursor-pointer' onClick={googleSignUp}>
           <img src={google} className='w-[25px]' alt="" />
           <span className='text-[18px] text-gray-500'>oogle</span>
-        </div>
+        </button>
 
         <div className='text-[#6f6f6f]'>already have an account?
           <span className='ml-2 underline underline-offset-1 text-[black] cursor-pointer' onClick={()=>navigate("/login")}>Login</span>

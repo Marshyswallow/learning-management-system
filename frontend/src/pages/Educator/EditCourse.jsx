@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEdit, FaTrash, FaCloudUploadAlt } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { CiFileOff } from "react-icons/ci";
@@ -41,25 +41,22 @@ function EditCourse() {
     "AI tools",
   ];
 
-  const getCourseById = async () => {
-    console.log(`${serverUrl}api/course/getcoursebyid/${courseId}`, courseId);
-    try {
-      const result = await axios.get(
-        `${serverUrl}api/course/getcoursebyid/${courseId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("API result:", result.data);
-      setSelectCourse(result.data);
-    } catch (error) {
-      console.log("API Error:", error);
-    }
-  };
-
   useEffect(() => {
+    const getCourseById = async () => {
+      try {
+        const result = await axios.get(
+          `${serverUrl}api/course/getcoursebyid/${courseId}`,
+          { withCredentials: true }
+        );
+        setSelectCourse(result.data);
+      } catch (error) {
+        console.error("Failed to load course:", error);
+        toast.error(error.response?.data?.message || "Failed to load course");
+      }
+    };
+
     getCourseById();
-  }, []);
+  }, [courseId]);
 
   useEffect(() => {
     if (selectCourse) {
@@ -146,7 +143,7 @@ function EditCourse() {
 
       toast.error(error?.response?.data?.message || "Failed to update course");
     } finally {
-      setLoading(false);
+      setLoading1(false);
     }
   };
 
@@ -163,7 +160,7 @@ function EditCourse() {
             <h1 className="text-2xl font-semibold">Edit Course</h1>
           </div>
           <button
-            onClick={() => navigate(`/createlecture/${selectCourse._id}`)}
+            onClick={() => navigate(`/createlecture/${courseId}`)}
             className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800"
           >
             Go to Lectures
@@ -190,8 +187,9 @@ function EditCourse() {
           <button
             className="flex items-center gap-2 bg-red-50 text-red-600 border border-red-200 px-4 py-2.5 rounded-lg font-medium hover:bg-red-100 transition-all duration-200"
             onClick={handleRemoveCourse}
+            disabled={loading1}
           >
-            <FaTrash /> Delete Course
+            {loading1 ? <ClipLoader size={18} color="red" /> : <><FaTrash /> Delete Course</>}
           </button>
         </div>
 
@@ -319,6 +317,7 @@ function EditCourse() {
             </button>
             <button
               onClick={handleEditCourse}
+              disabled={loading || !selectCourse}
               className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
             >
               {loading ? <ClipLoader size={30} color="white" /> : "save"}

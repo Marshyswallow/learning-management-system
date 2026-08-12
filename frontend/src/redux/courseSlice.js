@@ -19,6 +19,9 @@ const courseSlice = createSlice({
     },
     updateCourse: (state, action) => {
       const updatedCourse = action.payload;
+      const creatorIndex = state.creatorCourseData.findIndex(
+        (course) => course._id === updatedCourse._id
+      );
       const courseIndex = state.courseData.findIndex(
         (course) => course._id === updatedCourse._id
       );
@@ -33,6 +36,9 @@ const courseSlice = createSlice({
         state.courseData[courseIndex] = updatedCourse;
       }
 
+      if (creatorIndex === -1) state.creatorCourseData.unshift(updatedCourse);
+      else state.creatorCourseData[creatorIndex] = updatedCourse;
+
     },
     setSelectedCourse:(state,action)=>{
       state.selectedCourse=action.payload
@@ -43,6 +49,9 @@ const courseSlice = createSlice({
 
         (course) => course._id !== action.payload
 
+      );
+      state.creatorCourseData = state.creatorCourseData.filter(
+        (course) => course._id !== action.payload
       );
 
     },

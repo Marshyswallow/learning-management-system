@@ -1,22 +1,18 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import {getAuth, GoogleAuthProvider} from "firebase/auth"
-// Your web app's Firebase configuration
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "loginecourses.firebaseapp.com",
-  projectId: "loginecourses",
-  storageBucket: "loginecourses.firebasestorage.app",
-  messagingSenderId: "111856022057",
-  appId: "1:111856022057:web:1691ecfd9853bcd5952238"
+  apiKey: "AIzaSyC9ZP-phIXe-XTdN5mZ7KHWRSP2_e6beDc",
+  authDomain: "learningmanagementsystem-5880b.firebaseapp.com",
+  projectId: "learningmanagementsystem-5880b",
+  storageBucket: "learningmanagementsystem-5880b.firebasestorage.app",
+  messagingSenderId: "386155582318",
+  appId: "1:386155582318:web:f72fb186843c251bd5a77f",
+  measurementId: "G-E67E5MVRVP"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const auth=getAuth(app)
-const provider=new GoogleAuthProvider()
-
-export {auth,provider}
+const analytics = getAnalytics(app);
+export const auth = getAuth(app);
+export const provider = new GoogleAuthProvider();

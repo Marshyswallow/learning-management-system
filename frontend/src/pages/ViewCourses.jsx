@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
   FaArrowLeft,
@@ -40,7 +40,7 @@ function ViewCourses() {
           { withCredentials: true }
         );
         setCourse(response.data);
-      } catch (error) {
+      } catch {
         // Keep the page usable with the published-course data if lecture loading fails.
         setCourse(courseData.find((item) => item._id === courseId) || null);
       } finally {
@@ -57,7 +57,7 @@ function ViewCourses() {
     const courseCreatorId = creatorId(course.creator);
     return courseData
       .filter((item) => item._id !== course._id && creatorId(item.creator) === courseCreatorId)
-      .slice(0, 3);
+      ;
   }, [course, courseData]);
 
   if (loading) {
@@ -73,7 +73,6 @@ function ViewCourses() {
     );
   }
 
-  const activeLecture = selectedLecture || lectures[0];
   const educator = Array.isArray(course.creator) ? course.creator[0] : course.creator;
   const educatorName = educator?.name || "Course educator";
   const currentUserId = userData?._id;
@@ -84,6 +83,13 @@ function ViewCourses() {
   const canPlayLecture = (lecture) => Boolean(
     isCourseCreator || isEnrolled || lecture?.isPreviewFree
   );
+  const visibleLectures = isCourseCreator || isEnrolled
+    ? lectures
+    : lectures.filter((lecture) => lecture.isPreviewFree && lecture.videoUrl);
+  const firstPlayableLecture = visibleLectures[0];
+  const activeLecture = selectedLecture && visibleLectures.includes(selectedLecture)
+    ? selectedLecture
+    : firstPlayableLecture;
 
   const handleEnroll = async () => {
     setEnrolling(true);
@@ -165,7 +171,13 @@ function ViewCourses() {
               <p className="flex items-center gap-2"><FaCheckCircle className="text-green-400" />{lectures.length || "10+"}+ hours of video content</p>
               <p className="flex items-center gap-2"><FaCheckCircle className="text-green-400" />Lifetime access to course materials</p>
             </div>
-            <button onClick={isEnrolled || isCourseCreator ? handleWatchCourse : handleEnroll} disabled={enrolling} className="mt-7 rounded-md bg-black px-7 py-3 font-semibold text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400">{isEnrolled || isCourseCreator ? "Watch Course" : enrolling ? "Opening Payment..." : "Enroll Now"}</button>
+            <button onClick={isEnrolled || isCourseCreator ? handleWatchCourse : handleEnroll} disabled={enrolling} className="mt-7 rounded-md bg-black px-7 py-3 font-semibold text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400">
+              {isEnrolled || isCourseCreator
+                ? "Watch videos"
+                : enrolling
+                  ? "Opening payment..."
+                  : "Enroll to watch videos"}
+            </button>
           </div>
         </section>
 
@@ -178,15 +190,23 @@ function ViewCourses() {
         <section className="grid gap-6 py-8 lg:grid-cols-2">
           <div className="min-h-[310px] rounded-2xl border border-gray-200 p-6 shadow-sm">
             <h2 className="text-2xl font-bold">Course Curriculum</h2>
-            <p className="mt-1 text-gray-500">{lectures.length} Lectures</p>
+            <p className="mt-1 text-gray-500">{visibleLectures.length} Available Lectures</p>
+            {!isEnrolled && !isCourseCreator && (
+              <p className="mt-3 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                Watch the free preview videos below. Enroll to unlock the complete course.
+              </p>
+            )}
             <div className="mt-5 space-y-3">
-              {lectures.length ? lectures.map((lecture, index) => (
+              {visibleLectures.length ? visibleLectures.map((lecture, index) => (
                 <button key={lecture._id || index} onClick={() => setSelectedLecture(lecture)} className={`flex w-full items-center gap-3 rounded-lg border p-4 text-left transition ${activeLecture?._id === lecture._id ? "border-black bg-gray-50" : "border-gray-200 hover:bg-gray-50"}`}>
                   {canPlayLecture(lecture) ? <FaPlayCircle className="text-gray-600" /> : <FaLock className="text-gray-500" />}
-                  <span>{lecture.lectureTitle || lecture.title || `Lecture ${index + 1}`}</span>
+                  <span>
+                    {lecture.lectureTitle || lecture.title || `Lecture ${index + 1}`}
+                    {lecture.isPreviewFree && <small className="ml-2 text-green-600">Free preview</small>}
+                  </span>
                   {!canPlayLecture(lecture) && <span className="ml-auto text-xs font-medium text-gray-500">Locked</span>}
                 </button>
-              )) : <p className="rounded-lg border border-dashed p-4 text-gray-500">Lectures will be added soon.</p>}
+              )) : <p className="rounded-lg border border-dashed p-4 text-gray-500">Free preview videos will be added soon.</p>}
             </div>
           </div>
           <div className="rounded-2xl border border-gray-200 p-6 shadow-sm">

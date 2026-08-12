@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { FaArrowLeft } from "react-icons/fa";
@@ -47,7 +47,7 @@ function EditLecture() {
     };
 
     fetchLectures();
-  }, [courseId, lectureId]);
+  }, [courseId, lectureId, dispatch, lectureData]);
 
   // Pre-fill fields once lectureData has the lecture
   useEffect(() => {

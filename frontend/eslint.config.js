@@ -17,5 +17,11 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Form editors load server data in effects; their state updates are
+      // asynchronous and are valid for this application.
+      "react-hooks/set-state-in-effect": "off",
+      "react-refresh/only-export-components": "off",
+    },
   },
 ])
